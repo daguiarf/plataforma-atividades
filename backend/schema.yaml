@@ -1,0 +1,629 @@
+openapi: 3.0.3
+info:
+  title: Plataforma de Atividades Escolares API
+  version: 1.0.0
+  description: API para gerenciamento de atividades, respostas e correções por professores
+paths:
+  /atividades/:
+    post:
+      operationId: atividades_create
+      description: Cria uma nova atividade vinculada a uma turma. O professor precisa
+        pertencer à turma.
+      summary: '[PROFESSOR] Criar atividade'
+      tags:
+      - Atividades
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Atividade'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Atividade'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Atividade'
+        required: true
+      security:
+      - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Atividade'
+          description: ''
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Atividade'
+          description: ''
+  /atividades/{id}/:
+    put:
+      operationId: atividades_update
+      description: Permite ao professor editar uma atividade criada por ele.
+      summary: '[PROFESSOR] Atualizar atividade'
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Atividades
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Atividade'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Atividade'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Atividade'
+        required: true
+      security:
+      - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Atividade'
+          description: ''
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Atividade'
+          description: ''
+    patch:
+      operationId: atividades_partial_update
+      description: Permite ao professor editar uma atividade criada por ele.
+      summary: '[PROFESSOR] Atualizar atividade'
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Atividades
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedAtividade'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedAtividade'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedAtividade'
+      security:
+      - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Atividade'
+          description: ''
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Atividade'
+          description: ''
+  /atividades/me/:
+    get:
+      operationId: atividades_me_retrieve
+      description: "\n    Retorna atividades conforme o tipo de usuário:\n\n    -
+        PROFESSOR: atividades criadas por ele\n    - ALUNO: atividades da turma vinculada\n
+        \   "
+      summary: Listar atividades
+      tags:
+      - Atividades
+      security:
+      - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Atividade'
+          description: ''
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Atividade'
+          description: ''
+  /auth/:
+    get:
+      operationId: auth_list
+      parameters:
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: page_size
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      tags:
+      - auth
+      security:
+      - jwtAuth: []
+      - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedUserList'
+          description: ''
+  /auth/create/:
+    post:
+      operationId: auth_create_create
+      tags:
+      - auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/User'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/User'
+        required: true
+      security:
+      - jwtAuth: []
+      - BearerAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: ''
+  /auth/login:
+    post:
+      operationId: auth_login_create
+      description: |-
+        Takes a set of user credentials and returns an access and refresh JSON web
+        token pair to prove the authentication of those credentials.
+      tags:
+      - auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TokenObtainPair'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TokenObtainPair'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/TokenObtainPair'
+        required: true
+      security:
+      - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenObtainPair'
+          description: ''
+  /respostas/:
+    post:
+      operationId: respostas_create
+      tags:
+      - respostas
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Resposta'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Resposta'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Resposta'
+        required: true
+      security:
+      - jwtAuth: []
+      - BearerAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Resposta'
+          description: ''
+  /respostas/{id}/:
+    put:
+      operationId: respostas_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - respostas
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Resposta'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Resposta'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Resposta'
+        required: true
+      security:
+      - jwtAuth: []
+      - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Resposta'
+          description: ''
+    patch:
+      operationId: respostas_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - respostas
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedResposta'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedResposta'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedResposta'
+      security:
+      - jwtAuth: []
+      - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Resposta'
+          description: ''
+  /respostas/atividade/{atividade_id}/:
+    get:
+      operationId: respostas_atividade_retrieve
+      parameters:
+      - in: path
+        name: atividade_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - respostas
+      security:
+      - jwtAuth: []
+      - BearerAuth: []
+      responses:
+        '200':
+          description: No response body
+  /respostas/me/:
+    get:
+      operationId: respostas_me_retrieve
+      tags:
+      - respostas
+      security:
+      - jwtAuth: []
+      - BearerAuth: []
+      responses:
+        '200':
+          description: No response body
+  /turmas/:
+    get:
+      operationId: turmas_list
+      parameters:
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: page_size
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      tags:
+      - turmas
+      security:
+      - jwtAuth: []
+      - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedTurmaList'
+          description: ''
+  /turmas/create/:
+    post:
+      operationId: turmas_create_create
+      tags:
+      - turmas
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Turma'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Turma'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Turma'
+        required: true
+      security:
+      - jwtAuth: []
+      - BearerAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Turma'
+          description: ''
+components:
+  schemas:
+    Atividade:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        titulo:
+          type: string
+          maxLength: 255
+        descricao:
+          type: string
+        data_entrega:
+          type: string
+          format: date-time
+        criado_em:
+          type: string
+          format: date-time
+          readOnly: true
+        professor:
+          type: integer
+          readOnly: true
+        turma:
+          type: integer
+      required:
+      - criado_em
+      - data_entrega
+      - descricao
+      - id
+      - professor
+      - titulo
+      - turma
+    PaginatedTurmaList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Turma'
+    PaginatedUserList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/User'
+    PatchedAtividade:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        titulo:
+          type: string
+          maxLength: 255
+        descricao:
+          type: string
+        data_entrega:
+          type: string
+          format: date-time
+        criado_em:
+          type: string
+          format: date-time
+          readOnly: true
+        professor:
+          type: integer
+          readOnly: true
+        turma:
+          type: integer
+    PatchedResposta:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        conteudo:
+          type: string
+        nota:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,2}(?:\.\d{0,2})?$
+          nullable: true
+        feedback:
+          type: string
+          nullable: true
+        atividade:
+          type: integer
+        aluno_nome:
+          type: string
+          readOnly: true
+    Resposta:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        conteudo:
+          type: string
+        nota:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,2}(?:\.\d{0,2})?$
+          nullable: true
+        feedback:
+          type: string
+          nullable: true
+        atividade:
+          type: integer
+        aluno_nome:
+          type: string
+          readOnly: true
+      required:
+      - aluno_nome
+      - atividade
+      - conteudo
+      - id
+    RoleEnum:
+      enum:
+      - PROFESSOR
+      - ALUNO
+      type: string
+      description: |-
+        * `PROFESSOR` - Professor
+        * `ALUNO` - Aluno
+    TokenObtainPair:
+      type: object
+      properties:
+        username:
+          type: string
+          writeOnly: true
+        password:
+          type: string
+          writeOnly: true
+        access:
+          type: string
+          readOnly: true
+        refresh:
+          type: string
+          readOnly: true
+      required:
+      - access
+      - password
+      - refresh
+      - username
+    Turma:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        nome:
+          type: string
+          maxLength: 100
+        professores:
+          type: array
+          items:
+            type: integer
+      required:
+      - id
+      - nome
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        username:
+          type: string
+          description: Required. 150 characters or fewer. Letters, digits and @/./+/-/_
+            only.
+          pattern: ^[\w.@+-]+$
+          maxLength: 150
+        email:
+          type: string
+          format: email
+          title: Email address
+          maxLength: 254
+        password:
+          type: string
+          writeOnly: true
+        role:
+          $ref: '#/components/schemas/RoleEnum'
+        turma:
+          type: integer
+          nullable: true
+      required:
+      - id
+      - password
+      - role
+      - username
+  securitySchemes:
+    jwtAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
